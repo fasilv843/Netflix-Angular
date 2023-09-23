@@ -18,12 +18,12 @@
                     <img 
                     src="https://image.tmdb.org/t/p/original/{{ s.poster_path }}" 
                     alt=""
-                    routerLink=""
+                    [routerLink]="['/movie',s.id]"
                     >
                 </div>
                 <div class="col-lg-9 my-4">
                     <h5>{{ s.original_title }}</h5>
-                    <p>{{ s.overview }}</p>
+                    <!-- <p>{{ s.overview }}</p> -->
                 </div>
             </div>
         </div>

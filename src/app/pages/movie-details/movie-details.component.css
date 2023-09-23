@@ -10,3 +10,15 @@ h1{
 p{
     color: #ffffff;
 }
+
+a{
+    background-color: #E50914;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+a:hover {
+    background-color: #E50914;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+}
