@@ -40,3 +40,7 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Created By Developer
+.env
+/src/environments/environment.ts

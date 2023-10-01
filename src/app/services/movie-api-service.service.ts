@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs'
 import { finalize, map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 
 export interface Movie {
@@ -39,13 +40,13 @@ export class MovieApiServiceService {
 
   constructor(private http: HttpClient) { }
 
-  baseurl = 'https://api.themoviedb.org/3';
-  apiKey = '08cc33bd5ae3a747598ce2ad84376e66';
+  baseurl = environment.API_URL;
+  apiKey = environment.API_KEY;
 
 
   //banner api data
   bannerApiData():Observable<Movie[]> {
-    return this.http.get<MoviesObj>(`${this.baseurl}/trending/all/week?api_key=${this.apiKey}`).pipe(
+    return this.http.get<MoviesObj>(`trending/all/week?api_key=`).pipe(
       map((result) => result.results.map(movie => ({
         id: movie.id,
         poster_path: movie.poster_path,
@@ -59,7 +60,7 @@ export class MovieApiServiceService {
 
   //trending movies api data
   trendingMovieApiData(): Observable<Movie[]> {
-    return this.http.get<MoviesObj>(`${this.baseurl}/trending/movie/day?api_key=${this.apiKey}`).pipe(
+    return this.http.get<MoviesObj>(`trending/movie/day?api_key=`).pipe(
       map((result) => result.results.map(movie => ({
         id: movie.id,
         poster_path: movie.poster_path,
@@ -74,7 +75,7 @@ export class MovieApiServiceService {
   getSearchMovie(movieName: string):Observable<Movie[]> {
     // console.log('search movieName from service');
     console.log(movieName);
-    return this.http.get<MoviesObj>(`${this.baseurl}/search/movie?api_key=${this.apiKey}&query=${movieName}`).pipe(
+    return this.http.get<MoviesObj>(`search/movie?query=${movieName}&api_key=`).pipe(
       map((result) => result.results.map(movie => ({
         id: movie.id,
         poster_path: movie.poster_path,
@@ -88,7 +89,7 @@ export class MovieApiServiceService {
   //get movie details
   getMovieDetails(movieId: number):Observable<Movie> {
     console.log(movieId,'#mevieDetais from service');
-    return this.http.get<Movie>(`${this.baseurl}/movie/${movieId}?api_key=${this.apiKey}`).pipe(
+    return this.http.get<Movie>(`movie/${movieId}?api_key=`).pipe(
       map(movie => ({
         id: movie.id,
         poster_path: movie.poster_path,
@@ -101,7 +102,7 @@ export class MovieApiServiceService {
 
   //get movie video
   getMovieVideo(movieId:number):Observable<string> {
-    return this.http.get<any>(`${this.baseurl}/movie/${movieId}/videos?api_key=${this.apiKey}`)
+    return this.http.get<any>(`movie/${movieId}/videos?api_key=`)
     .pipe(
       map((result) => {
         console.log(result, '#video result from service map operator');
@@ -113,7 +114,7 @@ export class MovieApiServiceService {
 
   //get movie cast
   getMovieCast(movieId: number):Observable<Cast[]> {
-    return this.http.get<CastObj>(`${this.baseurl}/movie/${movieId}/credits?api_key=${this.apiKey}`)
+    return this.http.get<CastObj>(`movie/${movieId}/credits?api_key=`)
       .pipe(
         map( result => result.cast.map( actor => ({
           profile_path: actor.profile_path,
@@ -124,7 +125,7 @@ export class MovieApiServiceService {
   }
 
   fetchMoviesByGenreId(genreId: number): Observable<Movie[]> {
-    return this.http.get<MoviesObj>(`${this.baseurl}/discover/movie?api_key=${this.apiKey}&with_genres=${genreId}`).pipe(
+    return this.http.get<MoviesObj>(`discover/movie?with_genres=${genreId}&api_key=`).pipe(
       map((result) => result.results.map(movie => ({
         id: movie.id,
         poster_path: movie.poster_path,

@@ -6,10 +6,11 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
 import { SearchComponent } from './pages/search/search.component';
 import { MovieDetailsComponent } from './pages/movie-details/movie-details.component';
-import { HttpClientModule } from '@angular/common/http'
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'
 import { MovieApiServiceService } from './services/movie-api-service.service';
 
 import { ReactiveFormsModule } from '@angular/forms';
+import { TransUrlInterceptor } from './interceptors/trans-url.interceptor';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,10 @@ import { ReactiveFormsModule } from '@angular/forms';
     HttpClientModule,
     ReactiveFormsModule
   ],
-  providers: [MovieApiServiceService],
+  providers: [
+    MovieApiServiceService,
+    { provide: HTTP_INTERCEPTORS, useClass: TransUrlInterceptor, multi:true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
