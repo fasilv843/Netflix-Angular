@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { MovieApiServiceService } from 'src/app/services/movie-api-service.service';
 import { Movie } from 'src/app/services/movie-api-service.service'
 
@@ -28,18 +29,30 @@ function mapToMoviePosters(movies: Movie[]): MoviePoster[] {
 
 
 
-export class HomeComponent {
+export class HomeComponent implements OnDestroy {
   constructor( private service: MovieApiServiceService ) {}
+
+  //Subscriptions
+  private bannerSub : Subscription = new Subscription();
+  private trendingMovieSub : Subscription = new Subscription();
+  private actionMovieSub : Subscription = new Subscription();
+  private adventureMovieSub : Subscription = new Subscription();
+  private animationMovieSub : Subscription = new Subscription();
+  private comedyMovieSub : Subscription = new Subscription();
+  private documentaryMovieSub : Subscription = new Subscription();
+  private scienceFictionMovieSub : Subscription = new Subscription();
+  private thrillerMovieSub : Subscription = new Subscription();
   
+  //Results
   bannerResult: Banner[] = [];
-  trendingMovieResult: MoviePoster[] = []
-  actionMoviesResult: MoviePoster[] = []
-  adventureMoviesResult: MoviePoster[] = []
-  animationMoviesResult: MoviePoster[] = []
-  comedyMoviesResult: MoviePoster[] = []
-  documentaryMoviesResult: MoviePoster[] = []
-  scienceFictionMoviesResult: MoviePoster[] = []
-  thrillerMoviesResult: MoviePoster[] = []
+  trendingMovieResult: MoviePoster[] = [];
+  actionMoviesResult: MoviePoster[] = [];
+  adventureMoviesResult: MoviePoster[] = [];
+  animationMoviesResult: MoviePoster[] = [];
+  comedyMoviesResult: MoviePoster[] = [];
+  documentaryMoviesResult: MoviePoster[] = [];
+  scienceFictionMoviesResult: MoviePoster[] = [];
+  thrillerMoviesResult: MoviePoster[] = [];
 
 
   ngOnInit(): void {
@@ -54,10 +67,22 @@ export class HomeComponent {
     this.thrillerMovie()
   }
 
+  ngOnDestroy(): void {
+    this.bannerSub.unsubscribe();
+    this.trendingMovieSub.unsubscribe();
+    this.actionMovieSub.unsubscribe();
+    this.adventureMovieSub.unsubscribe();
+    this.animationMovieSub.unsubscribe();
+    this.comedyMovieSub.unsubscribe();
+    this.documentaryMovieSub.unsubscribe();
+    this.scienceFictionMovieSub.unsubscribe();
+    this.thrillerMovieSub.unsubscribe();
+  }
+
   
   //banner data
   bannerData(){
-    this.service.bannerApiData().subscribe( (result) => {
+    this.bannerSub = this.service.bannerApiData().subscribe( (result) => {
       console.log(result, 'bannerresult#');
       console.log(typeof result, 'bannerresult#');
       this.bannerResult = result.map((movie) => {
@@ -68,7 +93,7 @@ export class HomeComponent {
   }
 
   tredingData(){
-    this.service
+    this.trendingMovieSub = this.service
       .trendingMovieApiData()
       .subscribe((result) => {
         this.trendingMovieResult = mapToMoviePosters(result);
@@ -77,7 +102,7 @@ export class HomeComponent {
   }
 
   actionMovie(){
-    this.service
+    this.actionMovieSub = this.service
       .fetchActionMovies()
       .subscribe( (result) => {
         this.actionMoviesResult = mapToMoviePosters(result)
@@ -86,7 +111,7 @@ export class HomeComponent {
   }
 
   adventureMovie(){
-    this.service
+    this.adventureMovieSub = this.service
       .fetchAdventureMovies()
       .subscribe( (result) => {
         this.adventureMoviesResult = mapToMoviePosters(result);
@@ -95,7 +120,7 @@ export class HomeComponent {
   }
 
   animationMovie(){
-    this.service
+    this.animationMovieSub = this.service
       .fetchAnimationMovies()
       .subscribe( (result) => {
         this.animationMoviesResult = mapToMoviePosters(result);
@@ -104,7 +129,7 @@ export class HomeComponent {
   }
 
   comedyMovie(){
-    this.service
+    this.comedyMovieSub = this.service
       .fetchComedyMovies()
       .subscribe( (result) => {
         this.comedyMoviesResult = mapToMoviePosters(result);
@@ -113,7 +138,7 @@ export class HomeComponent {
   }
 
   documentaryMovie(){
-    this.service
+    this.documentaryMovieSub = this.service
       .fetchDocumentaryMovies()
       .subscribe( (result) => {
         this.documentaryMoviesResult = mapToMoviePosters(result);
@@ -122,7 +147,7 @@ export class HomeComponent {
   }
 
   scienceFictionMovie(){
-    this.service
+    this.scienceFictionMovieSub = this.service
       .fetchScienceFictionMovies()
       .subscribe( (result) => {
         this.scienceFictionMoviesResult = mapToMoviePosters(result);
@@ -131,7 +156,7 @@ export class HomeComponent {
   }
 
   thrillerMovie(){
-    this.service
+    this.thrillerMovieSub = this.service
       .fetchThrillerMovies()
       .subscribe( (result) => {
         this.thrillerMoviesResult = mapToMoviePosters(result);
