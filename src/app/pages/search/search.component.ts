@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms'
-import { MovieApiServiceService } from 'src/app/services/movie-api-service.service';
+import { Movie, MovieApiServiceService } from 'src/app/services/movie-api-service.service';
 
 
 
@@ -16,17 +16,18 @@ export class SearchComponent {
     private service: MovieApiServiceService
   ){}
 
-  searchResult: any;
+  searchResult: Movie[] = []
 
   searchForm = new FormGroup({
-    'movieName':new FormControl(null)
+    'movieName': new FormControl('')
   })
 
   submitForm() {
     console.log(this.searchForm.value,'searchForm#');
-    this.service.getSearchMovie(this.searchForm.value).subscribe( (result) => {
+    const movieName = this.searchForm.value.movieName ?? '';
+    this.service.getSearchMovie(movieName).subscribe( (result) => {
       console.log(result, 'searchMovie##');
-      this.searchResult = result.results
+      this.searchResult = result
     })
   }
 }

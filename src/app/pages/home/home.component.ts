@@ -1,22 +1,45 @@
 import { Component } from '@angular/core';
 import { MovieApiServiceService } from 'src/app/services/movie-api-service.service';
+import { Movie } from 'src/app/services/movie-api-service.service'
+
+interface MoviePoster {
+  id:number,
+  poster_path: string,
+}
+
+interface Banner {
+  backdrop_path: string, 
+  original_title:string | null;
+  overview: string | null;
+}
+
+function mapToMoviePosters(movies: Movie[]): MoviePoster[] {
+  return movies.map((movie) => {
+    const { id, poster_path } = movie;
+    return { id, poster_path } as MoviePoster;
+  });
+}
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
+
+
+
 export class HomeComponent {
   constructor( private service: MovieApiServiceService ) {}
   
-  bannerResult: any = [];
-  trendingMovieResult: any = []
-  actionMoviesResult:any = []
-  adventureMoviesResult:any = []
-  animationMoviesResult:any = []
-  comedyMoviesResult:any = []
-  documentaryMoviesResult:any = []
-  scienceFictionMoviesResult:any = []
-  thrillerMoviesResult:any = []
+  bannerResult: Banner[] = [];
+  trendingMovieResult: MoviePoster[] = []
+  actionMoviesResult: MoviePoster[] = []
+  adventureMoviesResult: MoviePoster[] = []
+  animationMoviesResult: MoviePoster[] = []
+  comedyMoviesResult: MoviePoster[] = []
+  documentaryMoviesResult: MoviePoster[] = []
+  scienceFictionMoviesResult: MoviePoster[] = []
+  thrillerMoviesResult: MoviePoster[] = []
 
 
   ngOnInit(): void {
@@ -31,26 +54,33 @@ export class HomeComponent {
     this.thrillerMovie()
   }
 
+  
   //banner data
   bannerData(){
     this.service.bannerApiData().subscribe( (result) => {
       console.log(result, 'bannerresult#');
-      this.bannerResult = result.results;
+      console.log(typeof result, 'bannerresult#');
+      this.bannerResult = result.map((movie) => {
+        const {  backdrop_path, original_title, overview } = movie;
+        return { backdrop_path, original_title, overview } as Banner;
+      });;
     })
   }
 
   tredingData(){
-    this.service.trendingMovieApiData().subscribe((result) => {
-      console.log(result, 'trendingresult#');
-      this.trendingMovieResult = result.results;
-    })
+    this.service
+      .trendingMovieApiData()
+      .subscribe((result) => {
+        this.trendingMovieResult = mapToMoviePosters(result);
+      }
+    )
   }
 
   actionMovie(){
     this.service
       .fetchActionMovies()
       .subscribe( (result) => {
-        this.actionMoviesResult = result.results
+        this.actionMoviesResult = mapToMoviePosters(result)
       }
     )
   }
@@ -59,7 +89,7 @@ export class HomeComponent {
     this.service
       .fetchAdventureMovies()
       .subscribe( (result) => {
-        this.adventureMoviesResult = result.results
+        this.adventureMoviesResult = mapToMoviePosters(result);
       }
     )
   }
@@ -68,7 +98,7 @@ export class HomeComponent {
     this.service
       .fetchAnimationMovies()
       .subscribe( (result) => {
-        this.animationMoviesResult = result.results
+        this.animationMoviesResult = mapToMoviePosters(result);
       }
     )
   }
@@ -77,7 +107,7 @@ export class HomeComponent {
     this.service
       .fetchComedyMovies()
       .subscribe( (result) => {
-        this.comedyMoviesResult = result.results
+        this.comedyMoviesResult = mapToMoviePosters(result);
       }
     )
   }
@@ -86,7 +116,7 @@ export class HomeComponent {
     this.service
       .fetchDocumentaryMovies()
       .subscribe( (result) => {
-        this.documentaryMoviesResult = result.results
+        this.documentaryMoviesResult = mapToMoviePosters(result);
       }
     )
   }
@@ -95,7 +125,7 @@ export class HomeComponent {
     this.service
       .fetchScienceFictionMovies()
       .subscribe( (result) => {
-        this.scienceFictionMoviesResult = result.results
+        this.scienceFictionMoviesResult = mapToMoviePosters(result);
       }
     )
   }
@@ -104,13 +134,9 @@ export class HomeComponent {
     this.service
       .fetchThrillerMovies()
       .subscribe( (result) => {
-        this.thrillerMoviesResult = result.results
+        this.thrillerMoviesResult = mapToMoviePosters(result);
       }
     )
   }
-
-
-
-
 
 }

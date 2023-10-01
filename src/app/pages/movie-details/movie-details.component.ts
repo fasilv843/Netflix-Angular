@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MovieApiServiceService } from 'src/app/services/movie-api-service.service';
+import { Cast, Movie, MovieApiServiceService } from 'src/app/services/movie-api-service.service';
 
 @Component({
   selector: 'app-movie-details',
@@ -14,12 +14,12 @@ export class MovieDetailsComponent {
     private router: ActivatedRoute
   ){}
 
-  getMovieDetailResult: any;
-  getMovieVideoResult:any;
-  getMovieCastResult:any;
+  getMovieDetailResult: Movie;
+  getMovieVideoResult: string;
+  getMovieCastResult: Cast[];
 
   ngOnInit():void {
-    let getParamId = this.router.snapshot.paramMap.get('id');
+    let getParamId = Number(this.router.snapshot.paramMap.get('id'))
     console.log(getParamId,'getParamId##');
     
     this.getMovie(getParamId)
@@ -28,29 +28,24 @@ export class MovieDetailsComponent {
   }
 
 
-  getMovie(id:any){
+  getMovie(id:number){
     this.service.getMovieDetails(id).subscribe( (result) => {
       console.log(result, 'getmovieDetails##');
       this.getMovieDetailResult = result;
     })
   }
 
-  getVideo(id:any){
+  getVideo(id:number){
     this.service.getMovieVideo(id).subscribe((result) => {
       console.log(result, 'getMovieVideo#');
-      // this.getMovieVideoResult = result;
-      result.results.forEach((element:any) => {
-        if(element.type === 'Trailer'){
-          this.getMovieVideoResult = element.key;
-        }
-      });
+      this.getMovieVideoResult = result;
     })
   }
 
-  getMovieCast(id:any){
+  getMovieCast(id:number){
     this.service.getMovieCast(id).subscribe( (result) => {
       console.log(result, 'movieCast#');
-      this.getMovieCastResult = result.cast;
+      this.getMovieCastResult = result;
     })
   }
 }
