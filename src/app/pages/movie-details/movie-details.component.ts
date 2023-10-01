@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { Cast, Movie, MovieApiServiceService } from 'src/app/services/movie-api-service.service';
 
 @Component({
@@ -7,12 +8,16 @@ import { Cast, Movie, MovieApiServiceService } from 'src/app/services/movie-api-
   templateUrl: './movie-details.component.html',
   styleUrls: ['./movie-details.component.css']
 })
-export class MovieDetailsComponent {
+export class MovieDetailsComponent implements OnDestroy {
 
   constructor(
-    private service:MovieApiServiceService,
+    private service: MovieApiServiceService,
     private router: ActivatedRoute
   ){}
+
+  private movieDetailsSub: Subscription = new Subscription();
+  private movieVideoSub: Subscription = new Subscription();
+  private movieCastSub: Subscription = new Subscription();
 
   getMovieDetailResult: Movie;
   getMovieVideoResult: string;
@@ -27,23 +32,30 @@ export class MovieDetailsComponent {
     this.getMovieCast(getParamId)
   }
 
+  ngOnDestroy(): void {
+    this.movieDetailsSub.unsubscribe()
+    this.movieVideoSub.unsubscribe()
+    this.movieCastSub.unsubscribe()
+    console.log('unsubscribed from movie details cast video');
+  }
+
 
   getMovie(id:number){
-    this.service.getMovieDetails(id).subscribe( (result) => {
+    this.movieDetailsSub = this.service.getMovieDetails(id).subscribe( (result) => {
       console.log(result, 'getmovieDetails##');
       this.getMovieDetailResult = result;
     })
   }
 
   getVideo(id:number){
-    this.service.getMovieVideo(id).subscribe((result) => {
+    this.movieVideoSub = this.service.getMovieVideo(id).subscribe((result) => {
       console.log(result, 'getMovieVideo#');
       this.getMovieVideoResult = result;
     })
   }
 
   getMovieCast(id:number){
-    this.service.getMovieCast(id).subscribe( (result) => {
+    this.movieCastSub = this.service.getMovieCast(id).subscribe( (result) => {
       console.log(result, 'movieCast#');
       this.getMovieCastResult = result;
     })
