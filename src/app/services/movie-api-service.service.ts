@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs'
+import { Observable, of, throwError } from 'rxjs'
 import { finalize, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
@@ -21,9 +21,9 @@ interface MoviesObj {
 }
 
 export interface Cast {
-  character: string;///
-  original_name: string;////
-  profile_path: string | null; // Assuming profile_path can be null
+  character: string;
+  original_name: string;
+  profile_path: string | null; // profile_path can be null
   // Add more properties as needed
 }
 
@@ -73,8 +73,6 @@ export class MovieApiServiceService {
 
   //search movies
   getSearchMovie(movieName: string):Observable<Movie[]> {
-    // console.log('search movieName from service');
-    console.log(movieName);
     return this.http.get<MoviesObj>(`search/movie?query=${movieName}&api_key=`).pipe(
       map((result) => result.results.map(movie => ({
         id: movie.id,
@@ -88,7 +86,6 @@ export class MovieApiServiceService {
 
   //get movie details
   getMovieDetails(movieId: number):Observable<Movie> {
-    console.log(movieId,'#mevieDetais from service');
     return this.http.get<Movie>(`movie/${movieId}?api_key=`).pipe(
       map(movie => ({
         id: movie.id,

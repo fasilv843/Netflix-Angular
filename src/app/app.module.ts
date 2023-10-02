@@ -11,6 +11,7 @@ import { MovieApiServiceService } from './services/movie-api-service.service';
 
 import { ReactiveFormsModule } from '@angular/forms';
 import { TransUrlInterceptor } from './interceptors/trans-url.interceptor';
+import { ErrorHandlingInterceptor } from './interceptors/error-handling.interceptor';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { TransUrlInterceptor } from './interceptors/trans-url.interceptor';
   ],
   providers: [
     MovieApiServiceService,
-    { provide: HTTP_INTERCEPTORS, useClass: TransUrlInterceptor, multi:true }
+    { provide: HTTP_INTERCEPTORS, useClass: TransUrlInterceptor, multi:true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorHandlingInterceptor, multi:true }
   ],
   bootstrap: [AppComponent]
 })
